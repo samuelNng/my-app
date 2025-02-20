@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -35,4 +35,49 @@
   to {
     transform: rotate(360deg);
   }
+} */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  background: #333;
+  padding: 15px;
+  color: white;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+}
+
+.menu-dropdown {
+  position: relative;
+  cursor: pointer;
+}
+
+.submenu {
+  position: absolute;
+  background: white;
+  list-style: none;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  top: 100%;
+  left: 0;
+  
+}
+
+.submenu li {
+  padding: 5px 10px;
+  white-space: nowrap; /* Prevents text from wrapping */
+}
+
+.submenu a {
+  color: black;
 }

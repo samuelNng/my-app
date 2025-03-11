@@ -1,60 +1,104 @@
-/* .App {
-  text-align: center;
-}
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-} */
+/* Navbar Styling */
 .navbar {
   display: flex;
-  justify-content: space-between;
-  background: #333;
-  padding: 15px;
+  justify-content: center;
+  align-items: center;
+  background: #690B22;
+  padding: 20px 30px;
   color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow */
 }
 
 .navbar ul {
   list-style: none;
   display: flex;
-  gap: 30px;
+  gap: 25px;
+  justify-content: center;
 }
 
 .navbar a {
   color: white;
+  font-size: 1.2rem;
   text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease-in-out; /* Smooth transition */
 }
 
+.navbar a:hover {
+  color: #d9534f; /* Accent color */
+}
+
+/* Menu Styling */
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  background-color: #F1E3D3;
+  color: #1B4D3E;
+  font-family: 'Helvetica', 'Arial', sans-serif;
+}
+
+.menu-container {
+  background: #1B4D3E;
+  padding: 40px 60px;
+  border-radius: 20px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* More subtle shadow */
+  text-align: center;
+  transition: transform 0.3s ease-in-out; /* Smooth hover effect */
+}
+
+/* .menu-container:hover {
+  transform: scale(1.05); /* Hover scale effect 
+} */
+
+.menu h1 {
+  font-size: 3rem;
+  margin-bottom: 30px;
+  font-weight: 700; /* Bold title */
+}
+
+.menu ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  padding: 0;
+}
+
+.menu ul li {
+  font-size: 1.8rem;
+  padding: 18px 30px;
+  background: #E07A5F;
+  border-radius: 10px;
+  transition: background 0.3s ease, transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 320px; /* Adjust width */
+}
+
+.menu ul li:hover {
+  background: #d9534f; /* Highlight on hover */
+  transform: translateY(-3px); /* Lift effect */
+}
+
+.menu ul li a {
+  flex-grow: 1;
+  text-align: left;
+  color: #F1E3D3;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+/* Menu Dropdown Styling */
 .menu-dropdown {
   position: relative;
   cursor: pointer;
@@ -62,22 +106,109 @@
 
 .submenu {
   position: absolute;
-  background: white;
+  background: #F1E3D3;
   list-style: none;
   padding: 20px;
   border-radius: 10px;
-  display: flex;
+  display: none;
   flex-direction: column;
   top: 100%;
-  left: 0;
-  
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  transition: opacity 0.3s ease;
+}
+
+.menu-dropdown:hover .submenu {
+  display: flex;
+  opacity: 1; /* Smooth fade-in */
 }
 
 .submenu li {
-  padding: 5px 10px;
-  white-space: nowrap; /* Prevents text from wrapping */
+  padding: 12px 20px;
+  font-size: 1.4rem;
+  font-weight: 500;
 }
 
 .submenu a {
-  color: black;
+  color: #690B22;
+}
+
+/* Plus Button Styling */
+.plus-button {
+  background-color: #fff;
+  color: #d9534f;
+  border: 2px solid #d9534f;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.plus-button:hover {
+  background-color: #d9534f;
+  color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); /* Add shadow on hover */
+}
+
+.plus-button:active {
+  transform: scale(0.9);
+}
+
+/* Cart Icon Styling */
+.cart-container {
+  position: relative;
+  display: inline-block;
+  margin-left: 5px;
+  margin-right: 10px;
+  
+}
+
+.cart-icon {
+  font-size: 25px;
+  color: white;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #d9534f;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .menu-container {
+    padding: 40px 20px;
+  }
+
+  .menu ul li {
+    width: 100%;
+  }
+
+  .navbar {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .navbar ul {
+    flex-direction: column;
+  }
 }

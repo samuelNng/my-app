@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import menuData from '../backend/menu.json'; // Import menu data directly
+import menuData from './backend/menu.json'; // Import menu data directly
 
 const Menu = () => {
   const [menuItems, setMenuItems] = useState([]);

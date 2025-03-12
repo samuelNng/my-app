@@ -3,12 +3,6 @@
     "item_id": 1,
     "name": "meat",
     "price": 20,
-    "quantity": 2
-  },
-  {
-    "item_id": 2,
-    "name": "fish",
-    "price": 30,
-    "quantity": 6
+    "quantity": 1
   }
 ]

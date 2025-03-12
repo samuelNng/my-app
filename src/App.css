@@ -1,4 +1,4 @@
-
+/* 
 
 /* Navbar Styling */
 .navbar {
@@ -211,4 +211,5 @@
   .navbar ul {
     flex-direction: column;
   }
-}
+} 
+

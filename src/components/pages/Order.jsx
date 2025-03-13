@@ -64,7 +64,7 @@ const Order = ({ totalQuantity, setTotalQuantity }) => {
           {menuItems.map((item) => (
             <div key={item.item_id} className="flex items-center justify-between p-4 border rounded-lg shadow-md bg-gray-50">
               <div className="flex items-center gap-4">
-                <img src={item.image} alt={item.name} className="w-16 h-16 rounded-md" />
+                <img src={item.image} alt={item.name} className="w-30 h-30 rounded-md" />
                 <div>
                   <Link to={item.name === "meat" ? "/meat" : "/fish"} className="text-lg font-semibold text-gray-800 hover:underline">
                     {item.name === "meat" ? "🥩 Meat Dish" : "🐟 Fish Dish"}

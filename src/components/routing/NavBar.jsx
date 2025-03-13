@@ -46,8 +46,8 @@ const NavBar=(props)=>{
       </ul>
       )}
       </li>
-      <li><Link to ="/about">About </Link></li>
-      <li><Link to ="/contact">Contact </Link></li>
+      {/* <li><Link to ="/about">About </Link></li> */}
+      <li><Link to ="/contact">Contact Us</Link></li>
       {/* <li ><Link to ="/orders">Order </Link></li> */}
       <li className="cart-container">
       <Link to="/orders">

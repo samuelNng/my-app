@@ -1,102 +1,423 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, ZoomControl, useMap } from "react-leaflet";
+import L from "leaflet"; // Import Leaflet
+import "leaflet/dist/leaflet.css";
 
-const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+// Import sample location data directly
+import locationData from '../backend/locations.json'; 
 
-  // Handle Input Change
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+// Fix for default marker icon
+import icon from "leaflet/dist/images/marker-icon.png";
+import iconShadow from "leaflet/dist/images/marker-shadow.png";
 
-  // Handle Form Submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form Submitted:", formData);
-    alert("Thank you! We will get back to you soon.");
-    setFormData({ name: "", email: "", message: "" }); // Reset form
-  };
+let DefaultIcon = L.icon({
+    iconUrl: icon,
+    shadowUrl: iconShadow,
+    iconSize: [25, 41], // Size of the icon
+    iconAnchor: [12, 41], // Point of the icon which will correspond to the marker's location
+    popupAnchor: [1, -34], // Point from which the popup should open relative to the iconAnchor
+    shadowSize: [41, 41], // Size of the shadow
+});
 
-  return (
-    <>
-      <div className="bg-gray-900 py-24 sm:py-32 text-white">
-        <div className="mx-auto max-w-5xl px-6">
-          <h2 className="text-5xl font-bold tracking-tight text-white sm:text-6xl">
-            Contact Us
-          </h2>
-          <p className="mt-6 text-lg text-gray-300">
-            Have questions or want to make a reservation? Get in touch with us!
-          </p>
+L.Marker.prototype.options.icon = DefaultIcon; // Set the default icon
 
-          {/* Contact Info */}
-          <div className="mt-10">
-            <h3 className="text-2xl font-semibold">Our Contact</h3>
-            <p className="mt-2 text-lg">📧 Email: abc@gmail.com</p>
-            <p className="mt-2 text-lg">📍 Address: 123 Main Street, City, Country</p>
-            <p className="mt-2 text-lg">📞 Phone: +123 456 7890</p>
-          </div>
-
-          {/* Reservation Form */}
-          <div className="mt-12 bg-gray-800 p-6 rounded-lg shadow-lg">
-            <h3 className="text-2xl font-semibold">Leave Your Contact</h3>
-            <form className="mt-6" onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label className="block text-gray-300">Full Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  className="w-full p-3 mt-1 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring focus:ring-purple-500"
-                  placeholder="Enter your name"
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-gray-300">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="w-full p-3 mt-1 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring focus:ring-purple-500"
-                  placeholder="Enter your email"
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-gray-300">Message</label>
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  rows="4"
-                  className="w-full p-3 mt-1 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring focus:ring-purple-500"
-                  placeholder="Your message..."
-                ></textarea>
-              </div>
-
-              <button
-                type="submit"
-                className="mt-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-all"
-              >
-                Submit
-              </button>
-            </form>
-          </div>
+// Component to display location details panel
+const LocationDetailsPanel = ({ location }) => {
+    if (!location) return null;
+    
+    return (
+        <div className="location-details-panel">
+            <h3>{location.properties.name}</h3>
+            <p>{location.properties.address_line2}</p>
+            {location.properties.rating && (
+                <div className="rating">
+                    {location.properties.reviews && (
+                        <span> ({location.properties.reviews} reviews)</span>
+                    )}
+                </div>
+            )}
+            {location.properties.phone && (
+                <p>Phone: {location.properties.phone}</p>
+            )}
+            {location.properties.website && (
+                <p><a href={location.properties.website} target="_blank" rel="noopener noreferrer">Visit Website</a></p>
+            )}
         </div>
-      </div>
-    </>
-  );
+    );
 };
 
-export default Contact;
+// Map event handler component
+const MapEventHandler = ({ setSelectedLocation }) => {
+    useMapEvents({
+        click: () => {
+            setSelectedLocation(null);
+        }
+    });
+    return null;
+};
+
+// Component to fly to a marker when a location is selected
+const FlyToMarker = ({ selectedLocation }) => {
+    const map = useMap();
+    
+    useEffect(() => {
+        if (selectedLocation) {
+            map.flyTo(
+                [selectedLocation.properties.lat, selectedLocation.properties.lon],
+                16,
+                {
+                    animate: true,
+                    duration: 1
+                }
+            );
+        }
+    }, [selectedLocation, map]);
+    
+    return null;
+};
+
+const Contact = () => {
+    // Map state
+    const [locations, setLocations] = useState([]);
+    const [selectedLocation, setSelectedLocation] = useState(null);
+    const mapRef = useRef(null);
+
+    // Contact form state
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        message: "",
+    });
+
+    useEffect(() => {
+        // Set locations directly from the imported JSON file
+        setLocations(locationData.features || []);
+    }, []);
+
+    // Fallback data in case the JSON import fails or is empty
+    const fallbackLocations = [
+        {
+            properties: {
+                name: "Machiya",
+                address_line2: "5 Panton St, London SW1Y 4DL",
+                lat: 51.5098,
+                lon: -0.1315,
+                rating: 4.5,
+                reviews: "2,806",
+                phone: "+44 20 7839 3512",
+                website: "https://www.machiya.london"
+            }
+        },
+        {
+            properties: {
+                name: "Sexy Fish Mayfair",
+                address_line2: "Berkeley Square, London",
+                lat: 51.5107,
+                lon: -0.1425,
+                rating: 4.2,
+                reviews: "1,964"
+            }
+        },
+        {
+            properties: {
+                name: "The National Gallery Restaurant",
+                address_line2: "Trafalgar Square, London",
+                lat: 51.5089,
+                lon: -0.1283,
+                rating: 4.3,
+                reviews: "1,205"
+            }
+        },
+        {
+            properties: {
+                name: "River View Cafe",
+                address_line2: "45 Thames Embankment, London",
+                lat: 51.5074,
+                lon: -0.1145,
+            }
+        }
+    ];
+
+    // Use fallback data if locations is empty
+    const displayLocations = locations.length > 0 ? locations : fallbackLocations;
+
+    // Handle Input Change for contact form
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    // Handle Form Submission
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log("Form Submitted:", formData);
+        alert("Thank you! We will get back to you soon.");
+        setFormData({ name: "", email: "", message: "" }); // Reset form
+    };
+
+    return (
+        <div className="contact-page">
+            {/* Contact Header */}
+            <div className="bg-gray-900 py-16 text-white">
+                <div className="mx-auto max-w-5xl px-6">
+                    <h2 className="text-5xl font-bold tracking-tight text-white sm:text-6xl">
+                        Contact Us
+                    </h2>
+                    <p className="mt-6 text-lg text-gray-300">
+                        Have questions or want to make a reservation? Get in touch with us or visit one of our restaurants!
+                    </p>
+                </div>
+            </div>
+
+            {/* Restaurant Map Section */}
+            <div className="bg-white py-12">
+                <div className="mx-auto max-w-5xl px-6">
+                    
+                    <div className="map-container" style={{ position: "relative" }}>
+                        {/* Location Details Panel */}
+                        <div style={{ 
+                            position: "absolute", 
+                            top: "10px", 
+                            left: "10px", 
+                            zIndex: 1000, 
+                            backgroundColor: "white", 
+                            padding: "15px", 
+                            borderRadius: "5px", 
+                            boxShadow: "0 0 10px rgba(0,0,0,0.2)",
+                            maxWidth: "300px"
+                        }}>
+                            {selectedLocation ? (
+                                <LocationDetailsPanel location={selectedLocation} />
+                            ) : (
+                                <div>
+                                    <h3>Restaurant Details</h3>
+                                    <p>Click on a marker to see details</p>
+                                </div>
+                            )}
+                        </div>
+                        
+                        <MapContainer
+                            center={[51.508037, -0.128049]}
+                            zoom={13}
+                            style={{ height: "500px", width: "100%" }}
+                            zoomControl={false}
+                            ref={mapRef}
+                        >
+                            <ZoomControl position="bottomleft" />
+                            <TileLayer
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            />
+                            <MapEventHandler setSelectedLocation={setSelectedLocation} />
+                            <FlyToMarker selectedLocation={selectedLocation} />
+                            {displayLocations.map((place, index) => (
+                                <Marker
+                                    key={index}
+                                    position={[place.properties.lat, place.properties.lon]}
+                                    eventHandlers={{
+                                        click: () => {
+                                            setSelectedLocation(place);
+                                        }
+                                    }}
+                                >
+                                    <Popup>
+                                        <strong>{place.properties.name}</strong> <br />
+                                        {place.properties.address_line2}
+                                    </Popup>
+                                </Marker>
+                            ))}
+                        </MapContainer>
+                    </div>
+                    
+                    {/* Restaurant List */}
+                    <div className="restaurant-list mt-8">
+                        <h3 className="text-2xl font-semibold mb-4">Restaurant List</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {displayLocations.map((place, index) => (
+                                <div key={index} 
+                                    className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                                        selectedLocation && selectedLocation.properties.name === place.properties.name 
+                                        ? "border-purple-500 bg-purple-50" 
+                                        : "border-gray-200 hover:border-purple-300"
+                                    }`}
+                                    onClick={() => setSelectedLocation(place)}
+                                >
+                                    <h4 className="text-lg font-semibold">{place.properties.name}</h4>
+                                    <p className="text-gray-600">{place.properties.address_line2}</p>
+                                    {place.properties.phone && <p className="text-gray-600">{place.properties.phone}</p>}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Contact Form Section */}
+            <div className="bg-gray-900 py-16 text-white">
+                <div className="mx-auto max-w-5xl px-6">
+                    {/* Contact Info */}
+                    <div className="mb-12">
+                        <h3 className="text-2xl font-semibold">Our Contact Information</h3>
+                        <p className="mt-4 text-lg">📧 Email: Shokudo@gmail.com</p>
+                        <p className="mt-2 text-lg">📍 Address: 12 Westminster Avenue, London</p>
+                        <p className="mt-2 text-lg">📞 Phone: +123 456 7890</p>
+                    </div>
+
+                    {/* Reservation Form */}
+                    <div className="bg-gray-800 p-8 rounded-lg shadow-lg">
+                        <h3 className="text-2xl font-semibold">Reservations</h3>
+                        <form className="mt-6" onSubmit={handleSubmit}>
+                            <div className="mb-4">
+                                <label className="block text-gray-300">Name</label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full p-3 mt-1 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring focus:ring-purple-500"
+                                    placeholder="Enter your name"
+                                />
+                            </div>
+
+                            <div className="mb-4">
+                                <label className="block text-gray-300">Email</label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full p-3 mt-1 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring focus:ring-purple-500"
+                                    placeholder="Enter your email"
+                                />
+                            </div>
+
+                            <div className="mb-4">
+                                <label className="block text-gray-300">Message</label>
+                                <textarea
+                                    name="message"
+                                    value={formData.message}
+                                    onChange={handleChange}
+                                    required
+                                    rows="4"
+                                    className="w-full p-3 mt-1 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring focus:ring-purple-500"
+                                    placeholder="Your message..."
+                                ></textarea>
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="mt-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-all"
+                            >
+                                Submit
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Contact;// 2import React, { useState } from "react";
+
+// const Contact = () => {
+//   const [formData, setFormData] = useState({
+//     name: "",
+//     email: "",
+//     message: "",
+//   });
+
+//   // Handle Input Change
+//   const handleChange = (e) => {
+//     setFormData({ ...formData, [e.target.name]: e.target.value });
+//   };
+
+//   // Handle Form Submission
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     console.log("Form Submitted:", formData);
+//     alert("Thank you! We will get back to you soon.");
+//     setFormData({ name: "", email: "", message: "" }); // Reset form
+//   };
+
+//   return (
+//     <>
+//       <div className="bg-gray-900 py-24 sm:py-32 text-white">
+//         <div className="mx-auto max-w-5xl px-6">
+//           <h2 className="text-5xl font-bold tracking-tight text-white sm:text-6xl">
+//             Contact Us
+//           </h2>
+//           <p className="mt-6 text-lg text-gray-300">
+//             Have questions or want to make a reservation? Get in touch with us!
+//           </p>
+
+//           {/* Contact Info */}
+//           <div className="mt-10">
+//             <h3 className="text-2xl font-semibold">Our Contact</h3>
+//             <p className="mt-2 text-lg">📧 Email: abc@gmail.com</p>
+//             <p className="mt-2 text-lg">📍 Address: 123 Main Street, City, Country</p>
+//             <p className="mt-2 text-lg">📞 Phone: +123 456 7890</p>
+//           </div>
+
+//           {/* Reservation Form */}
+//           <div className="mt-12 bg-gray-800 p-6 rounded-lg shadow-lg">
+//             <h3 className="text-2xl font-semibold">Leave Your Contact</h3>
+//             <form className="mt-6" onSubmit={handleSubmit}>
+//               <div className="mb-4">
+//                 <label className="block text-gray-300">Full Name</label>
+//                 <input
+//                   type="text"
+//                   name="name"
+//                   value={formData.name}
+//                   onChange={handleChange}
+//                   required
+//                   className="w-full p-3 mt-1 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring focus:ring-purple-500"
+//                   placeholder="Enter your name"
+//                 />
+//               </div>
+
+//               <div className="mb-4">
+//                 <label className="block text-gray-300">Email</label>
+//                 <input
+//                   type="email"
+//                   name="email"
+//                   value={formData.email}
+//                   onChange={handleChange}
+//                   required
+//                   className="w-full p-3 mt-1 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring focus:ring-purple-500"
+//                   placeholder="Enter your email"
+//                 />
+//               </div>
+
+//               <div className="mb-4">
+//                 <label className="block text-gray-300">Message</label>
+//                 <textarea
+//                   name="message"
+//                   value={formData.message}
+//                   onChange={handleChange}
+//                   required
+//                   rows="4"
+//                   className="w-full p-3 mt-1 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring focus:ring-purple-500"
+//                   placeholder="Your message..."
+//                 ></textarea>
+//               </div>
+
+//               <button
+//                 type="submit"
+//                 className="mt-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-all"
+//               >
+//                 Submit
+//               </button>
+//             </form>
+//           </div>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default Contact;
 // import React from 'react';
 
 // const Contact=()=>{

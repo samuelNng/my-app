@@ -2,7 +2,7 @@
     "features": [
       {
         "properties": {
-          "name": "The Green Restaurant",
+          "name": "Izakaya",
           "address_line2": "123 Oxford Street, London",
           "lat": 51.5153,
           "lon": -0.1414
@@ -10,7 +10,7 @@
       },
       {
         "properties": {
-          "name": "River View Cafe",
+          "name": "Teishoku-ya",
           "address_line2": "45 Thames Embankment, London",
           "lat": 51.5080,
           "lon": -0.1280
@@ -18,7 +18,7 @@
       },
       {
         "properties": {
-          "name": "London Bridge Bistro",
+          "name": "Kaisendon-ya",
           "address_line2": "78 London Bridge Road, London",
           "lat": 51.5079,
           "lon": -0.0877
@@ -26,7 +26,7 @@
       },
       {
         "properties": {
-          "name": "Big Ben Diner",
+          "name": "Shokudo",
           "address_line2": "12 Westminster Avenue, London",
           "lat": 51.5007,
           "lon": -0.1246
@@ -34,7 +34,7 @@
       },
       {
         "properties": {
-          "name": "Tower Grill",
+          "name": "Oden-ya",
           "address_line2": "34 Tower Hill, London",
           "lat": 51.5098,
           "lon": -0.0766

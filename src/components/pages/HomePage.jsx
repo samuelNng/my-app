@@ -11,7 +11,7 @@ function HomePage() {
         muted
         loop
       >
-        <source src="restaurant.mp4" type="video/mp4" />
+        <source src="japanese restaurant  (1).mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
@@ -31,14 +31,13 @@ function HomePage() {
               Explore Our Menu
             </button>
           </Link>
+          <Link to="/orders">
 
           <button className="bg-yellow-500 text-black px-6 py-3 rounded-lg text-lg font-semibold transition duration-300 ease-in-out transform hover:scale-105 hover:bg-yellow-600">
-            Buy Now
+            Order Now
           </button>
+          </Link>
         </div>
-
-        {/* Loading Spinner */}
-        {/* <div className="mt-6 w-10 h-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div> */}
       </div>
     </div>
   );

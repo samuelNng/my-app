@@ -29,10 +29,7 @@
 .navbar a:hover {
   color: #d9534f; /* Accent color */
 }
-.orders {
-  background: #060924; /* Dark blue background */
-  color: #ffffff; /* White text for better contrast */
-}
+
 /* Menu Styling */
 .menu {
   display: flex;
@@ -82,7 +79,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 320px; /* Adjust width */
+  width: 400px; /* Adjust width */
 }
 
 .menu ul li:hover {

@@ -48,10 +48,18 @@ const Menu = () => {
                 <Link to={item.name === "meat" ? "/meat" : "/fish"}>
                   {item.name === "meat" ? "🥩 Meat Dish" : "🐟 Fish Dish"}
                 </Link>
-                <button className="btn btn-danger btn-sm" onClick={() => addToOrder(item)}>Add</button>
+                
+                <img src={item.image} alt={item.name} className="w-30 h-30 rounded-md" />
+                {/* <button className="btn btn-danger btn-sm" onClick={() => addToOrder(item)}>Add</button> */}
               </li>
             ))}
           </ul>
+                    <Link to="/orders">
+          
+                    <button className="bg-yellow-500 text-black px-6 py-3 rounded-lg text-lg font-semibold transition duration-300 ease-in-out transform hover:scale-105 hover:bg-yellow-600">
+                      Order Now
+                    </button>
+                    </Link>
         </div>
       </div>
     </>

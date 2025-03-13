@@ -37,7 +37,7 @@ const NavBar=(props)=>{
         onMouseEnter={() => setMenuOpen(true)}
         onMouseLeave={() => setMenuOpen(false)}
       >
-      <Link to ="/menu">Menu </Link>
+      <Link to ="/menu">Our Menu </Link>
       {/* Submenu */}
       {/* {menuOpen && (
       <ul className="submenu">

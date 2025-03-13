@@ -29,7 +29,10 @@
 .navbar a:hover {
   color: #d9534f; /* Accent color */
 }
-
+.orders {
+  background: #060924; /* Dark blue background */
+  color: #ffffff; /* White text for better contrast */
+}
 /* Menu Styling */
 .menu {
   display: flex;
@@ -44,7 +47,7 @@
 }
 
 .menu-container {
-  background: #131c6b;
+  background: #060924;
   padding: 40px 60px;
   border-radius: 0px;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* More subtle shadow */

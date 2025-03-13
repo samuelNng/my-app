@@ -58,6 +58,7 @@ const Order = ({ totalQuantity, setTotalQuantity }) => {
   return (
     <div className="flex flex-col md:flex-row gap-8 p-8 bg-gray-100 min-h-screen">
       {/* Left Side: Menu */}
+      
       <div className="w-full md:w-1/2 bg-white shadow-lg rounded-lg p-6">
         <h2 className="text-2xl font-bold mb-4 text-gray-800">Our Menu 🍽️</h2>
         <div className="space-y-4">

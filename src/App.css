@@ -5,7 +5,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #690B22;
+  background: #a19fa0;
   padding: 20px 30px;
   color: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow */
@@ -44,9 +44,9 @@
 }
 
 .menu-container {
-  background: #1B4D3E;
+  background: #131c6b;
   padding: 40px 60px;
-  border-radius: 20px;
+  border-radius: 0px;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* More subtle shadow */
   text-align: center;
   transition: transform 0.3s ease-in-out; /* Smooth hover effect */

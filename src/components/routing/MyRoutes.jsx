@@ -12,30 +12,47 @@ import NavBar from './NavBar.jsx';
 import '../../output.css';
 
 
-const MyRoutes=()=>{
-    const [totalQuantity, setTotalQuantity] = useState(0); // Move state to App
-    return(
-    <> 
-    <Router>
-    
-        <NavBar totalQuantity={totalQuantity}/>
-        <Routes>
-            <Route path="/" element={<HomePage/>}/>
-            <Route path="/menu" element={<Menu/>}/>
-            <Route path="/meat" element={<Meat/>}/>
-            <Route path="/fish" element={<Fish/>}/>
-            <Route path="/about" element={<About/>}/>
-            <Route path="/contact" element={<Contact/>}/>
-            <Route path="/orders" element={<Order totalQuantity={totalQuantity} setTotalQuantity={setTotalQuantity}/>}/>
-            
-            
 
-        </Routes>
-    
-    </Router>
-       
-    </>
-    );
+const MyRoutes = ({ totalQuantity, setTotalQuantity }) => {
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/menu" element={<Menu />} />
+      <Route path="/meat" element={<Meat />} />
+      <Route path="/fish" element={<Fish />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/orders" element={<Order totalQuantity={totalQuantity} setTotalQuantity={setTotalQuantity} />} />
+    </Routes>
+  );
+};
 
-}
 export default MyRoutes;
+
+// const MyRoutes=()=>{
+//     const [totalQuantity, setTotalQuantity] = useState(0); // Move state to App
+//     return(
+//     <> 
+//     <Router>
+    
+//         <NavBar totalQuantity={totalQuantity}/>
+//         <Routes>
+//             <Route path="/" element={<HomePage/>}/>
+//             <Route path="/menu" element={<Menu/>}/>
+//             <Route path="/meat" element={<Meat/>}/>
+//             <Route path="/fish" element={<Fish/>}/>
+//             <Route path="/about" element={<About/>}/>
+//             <Route path="/contact" element={<Contact/>}/>
+//             <Route path="/orders" element={<Order totalQuantity={totalQuantity} setTotalQuantity={setTotalQuantity}/>}/>
+            
+            
+
+//         </Routes>
+    
+//     </Router>
+       
+//     </>
+//     );
+
+// }
+// export default MyRoutes;

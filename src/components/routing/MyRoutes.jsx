@@ -17,6 +17,7 @@ const MyRoutes=()=>{
     return(
     <> 
     <Router>
+    
         <NavBar totalQuantity={totalQuantity}/>
         <Routes>
             <Route path="/" element={<HomePage/>}/>
@@ -30,7 +31,7 @@ const MyRoutes=()=>{
             
 
         </Routes>
-
+    
     </Router>
        
     </>
